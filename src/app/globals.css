@@ -1,26 +1,322 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --amd-black: #0B0E14;
+  --amd-surface: #111520;
+  --amd-surface-2: #161B27;
+  --amd-blue: #005CB9;
+  --amd-blue-light: #0070E0;
+  --amd-blue-glow: rgba(0, 92, 185, 0.4);
+  --amd-blue-glow-sm: rgba(0, 92, 185, 0.2);
+  --amd-text: #E8EAF0;
+  --amd-text-muted: #8892A4;
+  --amd-text-dim: #4A5568;
+  --amd-border: rgba(255, 255, 255, 0.08);
+  --amd-border-blue: rgba(0, 92, 185, 0.5);
+  --amd-green: #00D26A;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  height: 100%;
+  overflow: hidden;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--amd-black);
+  color: var(--amd-text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Glassmorphism ── */
+.glass {
+  background: rgba(17, 21, 32, 0.7);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--amd-border);
+}
+
+.glass-blue {
+  background: rgba(0, 92, 185, 0.08);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--amd-border-blue);
+}
+
+/* ── Shimmer / Skeleton ── */
+@keyframes shimmer {
+  0% {
+    background-position: -600px 0;
+  }
+
+  100% {
+    background-position: 600px 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0.04) 25%,
+      rgba(255, 255, 255, 0.10) 50%,
+      rgba(255, 255, 255, 0.04) 75%);
+  background-size: 600px 100%;
+  animation: shimmer 1.4s infinite linear;
+  border-radius: 6px;
+}
+
+/* ── Scan Beam ── */
+@keyframes scan-beam {
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  90% {
+    opacity: 1;
+  }
+
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+.scan-beam {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--amd-blue), var(--amd-blue-light), transparent);
+  box-shadow: 0 0 16px 4px var(--amd-blue-glow);
+  animation: scan-beam 1.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ── Gradient Glow Pulse (command bar) ── */
+@keyframes glow-pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 12px 2px var(--amd-blue-glow-sm), 0 0 0 1px var(--amd-border-blue);
+  }
+
+  50% {
+    box-shadow: 0 0 28px 6px var(--amd-blue-glow), 0 0 0 1px var(--amd-blue);
+  }
+}
+
+.glow-focus:focus-within {
+  animation: glow-pulse 2s ease-in-out infinite;
+  border-color: var(--amd-blue) !important;
+}
+
+/* ── Fade in up ── */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fade-in-up 0.4s ease-out forwards;
+}
+
+/* ── Copied Toast ── */
+@keyframes pop-in {
+  0% {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+
+  70% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.pop-in {
+  animation: pop-in 0.25s ease-out forwards;
+}
+
+/* ── Green pulse (local inference active) ── */
+@keyframes green-pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 210, 106, 0.5);
+  }
+
+  50% {
+    box-shadow: 0 0 0 6px rgba(0, 210, 106, 0);
+  }
+}
+
+.green-pulse {
+  animation: green-pulse 1.8s ease-in-out infinite;
+}
+
+/* ── Tone pill ── */
+.tone-pill {
+  display: flex;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--amd-border);
+  border-radius: 999px;
+  padding: 2px;
+}
+
+.tone-pill button {
+  border-radius: 999px;
+  padding: 4px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: all 0.2s;
+  color: var(--amd-text-muted);
+}
+
+.tone-pill button.active {
+  background: var(--amd-blue);
+  color: #fff;
+  box-shadow: 0 0 10px var(--amd-blue-glow-sm);
+}
+
+/* ── Tab bar ── */
+.tab-bar {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  border: 1px solid var(--amd-border);
+}
+
+.tab-bar button {
+  flex: 1;
+  border-radius: 7px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s;
+  color: var(--amd-text-muted);
+}
+
+.tab-bar button.active {
+  background: var(--amd-blue);
+  color: #fff;
+  box-shadow: 0 0 10px var(--amd-blue-glow-sm);
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--amd-blue);
+}
+
+/* ── Generate Button ── */
+.btn-generate {
+  background: linear-gradient(135deg, var(--amd-blue) 0%, #0070E0 50%, #00AEEF 100%);
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border-radius: 10px;
+  padding: 12px 28px;
+  font-size: 14px;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.btn-generate::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.15) 50%, transparent 100%);
+  transform: translateX(-100%);
+  transition: transform 0.4s;
+}
+
+.btn-generate:hover::before {
+  transform: translateX(100%);
+}
+
+.btn-generate:hover {
+  box-shadow: 0 4px 24px var(--amd-blue-glow);
+  transform: translateY(-1px);
+}
+
+.btn-generate:active {
+  transform: translateY(0);
+}
+
+.btn-generate:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Download / Copy Buttons ── */
+.btn-icon {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--amd-border);
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--amd-text-muted);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.btn-icon:hover {
+  background: rgba(0, 92, 185, 0.15);
+  border-color: var(--amd-blue);
+  color: #fff;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+
+  html,
+  body {
+    overflow: auto;
+  }
 }
